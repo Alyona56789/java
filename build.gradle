@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco' // Add JaCoCo plugin
 }
 
 repositories {
@@ -13,7 +14,30 @@ dependencies {
 }
 
 test {
+    finalizedBy jacocoTestReport // Generate report after tests
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.7" // Specify JaCoCo version
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true // Enable XML report
+        html.required = true // Enable HTML report
+        csv.required = false // Disable CSV report
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.50 // Set minimum coverage threshold
+            }
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -23,4 +47,3 @@ tasks.withType(JavaCompile) {
 tasks.withType(Test) {
     systemProperty "file.encoding", "UTF-8"
 }
-
